@@ -110,7 +110,7 @@
                 <h5 class="fw-bold text-primary text-uppercase">Contact Us</h5>
                 <h1 class="mb-0">If You Have Any Query, Feel Free To Contact Us</h1>
             </div>
-            <div class="row g-5 mb-5">
+            <div class="row g-5 mb-5"  id="formsubmited">
                 <div class="col-lg-4">
                     <div class="d-flex align-items-center wow fadeIn" data-wow-delay="0.1s">
                         <div class="bg-primary d-flex align-items-center justify-content-center rounded" style="">
@@ -147,13 +147,7 @@
             </div>
             <div class="row g-5">
                 <div class="col-lg-6 wow slideInUp" data-wow-delay="0.3s">
-                    <form action="https://formsubmit.co/parwinderk928@gmail.com" method="POST">
-                        <!-- Hidden Configuration Inputs -->
-                        <input type="hidden" name="_captcha" value="false">
-                        <input type="hidden" name="_template" value="table">
-                        <input type="hidden" name="_autoresponse" value="Thanks for contacting us. We'll get back to you soon.">
-                        <input type="hidden" name="_next" value="https://parwinderkaur.github.io/syarainfotech/thank-you.html">
-
+                    <form id="contactform">
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <input type="text" name="name" class="form-control border-0 bg-light px-4" placeholder="Your Name" style="height: 55px;" required>
@@ -172,6 +166,12 @@
                             </div>
                         </div>
                     </form>
+
+                    <!-- Flash Message -->
+                    <div id="flashMessage" class="alert alert-success text-center mt-4 d-none" role="alert">
+                        Thank you! Your message has been sent successfully.
+                    </div>
+
                 </div>
                 <div class="col-lg-6 wow slideInUp" data-wow-delay="0.6s">
                     <iframe class="position-relative rounded w-100 h-100"
@@ -315,6 +315,45 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <script>
+document.getElementById("contactform").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const form = e.target;
+
+    const data = {
+        name: form.name.value.trim(),
+        email: form.email.value.trim(),
+        subject: form.subject.value.trim(),
+        message: form.message.value.trim()
+    };
+
+    fetch("https://script.google.com/macros/s/AKfycbzRbdrpGKKY4k8AdNyrbMvO7WtzjdA6OOgsl7pg-oR9aWoQG61IdjgfENz87Lg9_iQ9mw/exec", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    })
+    .then(res => res.text())
+    .then(result => {
+        if (result.trim() === "success") {
+            document.getElementById("flashMessage").classList.remove("d-none");
+            form.reset();
+            setTimeout(() => {
+                document.getElementById("flashMessage").classList.add("d-none");
+            }, 60000);
+        } else {
+            alert("Form failed to submit. Please try again.");
+        }
+    })
+    .catch(error => {
+        alert("Fetch error: " + error.message);
+    });
+});
+</script>
+
+
 </body>
 
 </html>
