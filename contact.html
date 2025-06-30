@@ -323,7 +323,8 @@ document.getElementById("contactform").addEventListener("submit", function (e) {
 
     fetch("https://script.google.com/macros/s/AKfycbzRbdrpGKKY4k8AdNyrbMvO7WtzjdA6OOgsl7pg-oR9aWoQG61IdjgfENz87Lg9_iQ9mw/exec", {
         method: "POST",
-        body: formData
+    mode: "no-cors",
+    body: formData
     })
     .then(response => response.text())
     .then(result => {
