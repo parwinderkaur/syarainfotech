@@ -318,15 +318,16 @@
     <script>
 document.getElementById("contactform").addEventListener("submit", function (e) {
     e.preventDefault();
+    const form = e.target;
+    const formData = new URLSearchParams(new FormData(form)).toString();
 
-    const formData = new FormData(e.target);
-
-    fetch("https://script.google.com/macros/s/AKfycbzRbdrpGKKY4k8AdNyrbMvO7WtzjdA6OOgsl7pg-oR9aWoQG61IdjgfENz87Lg9_iQ9mw/exec", {
+    fetch("https://script.google.com/macros/s/AKfycbw4rkQvFSjuiEe0A_x5W152I9XvXHTHAsgoOhvzZieUQXV4Kg6ij9JGaoBtg9eyqKbrPw/exec", {
         method: "POST",
-        body: formData,
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"
         },
+        body: formData,
+        redirect: "follow" // handle 302 if returned by Google
     })
     .then(response => response.text())
     .then(result => {
@@ -335,17 +336,14 @@ document.getElementById("contactform").addEventListener("submit", function (e) {
             setTimeout(() => {
                 document.getElementById("flashMessage").style.display = "none";
             }, 5000);
-            e.target.reset();
+            form.reset();
         } else {
-            alert("Form not submitted.");
+            alert("Server error: " + result);
         }
     })
     .catch(error => alert("Fetch failed: " + error.message));
 });
 </script>
-
-
-
 </body>
 
 </html>
