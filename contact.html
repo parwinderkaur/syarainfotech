@@ -319,39 +319,28 @@
 document.getElementById("contactform").addEventListener("submit", function (e) {
     e.preventDefault();
 
-    const form = e.target;
-
-    const data = {
-        name: form.name.value.trim(),
-        email: form.email.value.trim(),
-        subject: form.subject.value.trim(),
-        message: form.message.value.trim()
-    };
+    const formData = new FormData(e.target);
 
     fetch("https://script.google.com/macros/s/AKfycbzRbdrpGKKY4k8AdNyrbMvO7WtzjdA6OOgsl7pg-oR9aWoQG61IdjgfENz87Lg9_iQ9mw/exec", {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
+        body: formData
     })
-    .then(res => res.text())
+    .then(response => response.text())
     .then(result => {
-        if (result.trim() === "success") {
-            document.getElementById("flashMessage").classList.remove("d-none");
-            form.reset();
+        if (result.includes("success")) {
+            document.getElementById("flashMessage").style.display = "block";
             setTimeout(() => {
-                document.getElementById("flashMessage").classList.add("d-none");
-            }, 60000);
+                document.getElementById("flashMessage").style.display = "none";
+            }, 5000);
+            e.target.reset();
         } else {
-            alert("Form failed to submit. Please try again.");
+            alert("Form not submitted.");
         }
     })
-    .catch(error => {
-        alert("Fetch error: " + error.message);
-    });
+    .catch(error => alert("Fetch failed: " + error.message));
 });
 </script>
+
 
 
 </body>
